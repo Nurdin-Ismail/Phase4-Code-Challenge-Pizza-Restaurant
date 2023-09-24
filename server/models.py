@@ -39,6 +39,13 @@ class Restaurant(db.Model, SerializerMixin):
     pizzas = db.relationship(
         "Pizza", secondary = "restaurant_pizzas" , back_populates = "restaurants"    
     )
+    
+    @validates('name')
+    def validate_name(self, key, name):
+        if len(name) > 50:
+            raise ValueError("Name is too long")
+        
+        
     def __repr__(self):
         return f'<Pizza {self.name} >'
     
