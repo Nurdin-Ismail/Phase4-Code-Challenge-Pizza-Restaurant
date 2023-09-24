@@ -18,7 +18,7 @@ You need to create the following relationships:
 
 Start by creating the models and migrations for the following database tables:
 
-<img src="img/domain.png" alt="table relations for models">
+<img src=".img/domain.png" alt="table relations for models">
 
 ## Validations
 
