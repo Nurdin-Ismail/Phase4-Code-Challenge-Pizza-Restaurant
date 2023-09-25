@@ -6,8 +6,8 @@ db = SQLAlchemy()
 
 class Pizza(db.Model, SerializerMixin):
     __tablename__ = 'pizzas'
-    
-    serialize_rules= ('-restaurant_pizza.pizza', '-restaurants.pizzas','-restaurant_pizza')
+    # Removes all the specified attributes/keys from the json response   
+    serialize_rules= ('-restaurant_pizza.pizza', '-restaurants.pizzas','-restaurant_pizza', '-updated_at', '-created_at')
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable = False, unique = True)
     ingridients = db.Column(db.String)
@@ -25,8 +25,8 @@ class Pizza(db.Model, SerializerMixin):
 
 class Restaurant(db.Model, SerializerMixin):
     __tablename__ = 'restaurants'
-    
-    serialize_rules = ('-pizzas.restaurants', '-pizzas.restaurant_pizza')
+    # Removes all the specified attributes/keys from the json response
+    serialize_rules = ('-created_at','-updated_at', '-pizzas.created_at','-pizzas.restaurants', '-pizzas.restaurant_pizza',)
     
     
     id = db.Column(db.Integer, primary_key=True)
@@ -39,7 +39,7 @@ class Restaurant(db.Model, SerializerMixin):
     pizzas = db.relationship(
         "Pizza", secondary = "restaurant_pizzas" , back_populates = "restaurants"    
     )
-    
+    # Makes sure name isn't too long
     @validates('name')
     def validate_name(self, key, name):
         if len(name) > 50:
@@ -54,8 +54,8 @@ class Restaurant(db.Model, SerializerMixin):
     
 class RestaurantPizza(db.Model, SerializerMixin):
     __tablename__ = 'restaurant_pizzas'
-    
-    serialize_rules = ('-pizza.restaurants', '-pizza.restaurant_pizza')
+    # Removes all the specified attributes/keys from the json response
+    serialize_rules = ('-pizza.restaurants', '-pizza.restaurant_pizza', '-updated_at', '-created_at')
     id = db.Column(db.Integer, primary_key=True)
     pizza_id = db.Column(db.Integer, db.ForeignKey("pizzas.id"))
     restaurant_id = db.Column(db.Integer , db.ForeignKey("restaurants.id"))
@@ -64,7 +64,7 @@ class RestaurantPizza(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
     
-    
+    # Validates for price by making sure that price is under 30
     @validates("price")
     def validate_price(self, key, price):
         if not(price >= 1 and price <=30):
