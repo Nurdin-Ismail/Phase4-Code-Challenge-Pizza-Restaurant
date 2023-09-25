@@ -7,7 +7,6 @@ db = SQLAlchemy()
 class Pizza(db.Model, SerializerMixin):
     __tablename__ = 'pizzas'
     
-    serialize_rules = ('-restaurants.pizza',)
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable = False, unique = True)
@@ -27,12 +26,13 @@ class Pizza(db.Model, SerializerMixin):
 class Restaurant(db.Model, SerializerMixin):
     __tablename__ = 'restaurants'
     
-    serialize_rules = ('-pizzas.restaurant',)
+    serialize_rules = ('-pizzas.restaurants',)
     
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable = False, unique = True)
+    name = db.Column(db.String, unique = True)
     address = db.Column(db.String)
+    
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
@@ -44,6 +44,8 @@ class Restaurant(db.Model, SerializerMixin):
     def validate_name(self, key, name):
         if len(name) > 50:
             raise ValueError("Name is too long")
+        else:
+            return name
         
         
     def __repr__(self):
@@ -53,7 +55,6 @@ class Restaurant(db.Model, SerializerMixin):
 class RestaurantPizza(db.Model, SerializerMixin):
     __tablename__ = 'restaurant_pizzas'
     
-    serialize_rules = ('-pizza.restaurants', 'restaurant.pizzas',)
     
     id = db.Column(db.Integer, primary_key=True)
     pizza_id = db.Column(db.Integer, db.ForeignKey("pizzas.id"))
@@ -61,6 +62,7 @@ class RestaurantPizza(db.Model, SerializerMixin):
     price = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
     
     @validates("price")
     def validate_price(self, key, price):
