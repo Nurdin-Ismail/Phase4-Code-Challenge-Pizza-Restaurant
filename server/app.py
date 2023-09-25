@@ -81,7 +81,7 @@ class RestaurantPizzas(Resource):
 
         rp_dict = restaurant_pizza.to_dict()
         if rp_dict:
-            return make_response(rp_dict,201)
+            return make_response(rp_dict['pizza'],201)
         else:
             response ={"errors": ["validation errors"] }
             return make_response(restaurant_pizza, 404)

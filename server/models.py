@@ -7,14 +7,14 @@ db = SQLAlchemy()
 class Pizza(db.Model, SerializerMixin):
     __tablename__ = 'pizzas'
     
-    
+    serialize_rules= ('-restaurant_pizza.pizza', '-restaurants.pizzas','-restaurant_pizza')
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable = False, unique = True)
     ingridients = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
     
-    
+    restaurant_pizza = db.relationship("RestaurantPizza", backref='pizza')
     restaurants = db.relationship(
         "Restaurant", secondary = "restaurant_pizzas" , back_populates="pizzas"
     ) 
@@ -26,7 +26,7 @@ class Pizza(db.Model, SerializerMixin):
 class Restaurant(db.Model, SerializerMixin):
     __tablename__ = 'restaurants'
     
-    serialize_rules = ('-pizzas.restaurants',)
+    serialize_rules = ('-pizzas.restaurants', '-pizzas.restaurant_pizza')
     
     
     id = db.Column(db.Integer, primary_key=True)
@@ -55,13 +55,14 @@ class Restaurant(db.Model, SerializerMixin):
 class RestaurantPizza(db.Model, SerializerMixin):
     __tablename__ = 'restaurant_pizzas'
     
-    
+    serialize_rules = ('-pizza.restaurants', '-pizza.restaurant_pizza')
     id = db.Column(db.Integer, primary_key=True)
     pizza_id = db.Column(db.Integer, db.ForeignKey("pizzas.id"))
     restaurant_id = db.Column(db.Integer , db.ForeignKey("restaurants.id"))
     price = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    
     
     
     @validates("price")
