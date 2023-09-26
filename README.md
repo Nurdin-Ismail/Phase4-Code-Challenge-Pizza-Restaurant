@@ -53,6 +53,9 @@ Return JSON data in the format below:
 ]
 ```
 
+### RESULTS:
+<img src='/Img/get_restaurants.png>
+
 **GET /restaurants/:id**
 If the `Restaurant` exists, return JSON data in the format below:
 
@@ -76,6 +79,7 @@ If the `Restaurant` exists, return JSON data in the format below:
 }
 ```
 
+
 If the `Restaurant` does not exist, return the following JSON data, along with the appropriate HTTP status code:
 
 ```json
@@ -83,6 +87,8 @@ If the `Restaurant` does not exist, return the following JSON data, along with t
   "error": "Restaurant not found"
 }
 ```
+### RESULTS:
+<img src='/Img/get_restaurantbyid.png>
 
 **DELETE /restaurants/:id**
 If the `Restaurant` exists, it should be removed from the database, along with any `RestaurantPizzas` that are associated with it (a `RestaurantPizza` belongs to a `Restaurant`, so you need to delete the `RestaurantPizzas` before the `Restaurant` can be deleted).
@@ -96,6 +102,8 @@ If the `Restaurant` does not exist, return the following JSON data, along with t
   "error": "Restaurant not found"
 }
 ```
+### RESULTS:
+<img src='/Img/delete_restaurant.png>
 
 **GET /pizzas**
 Return JSON data in the format below:
@@ -114,6 +122,8 @@ Return JSON data in the format below:
   }
 ]
 ```
+### RESULTS:
+<img src='/Img/get_pizzas.png>
 
 **POST /restaurant_pizzas**
 This route should create a new `RestaurantPizza` that is associated with an existing `Pizza` and `Restaurant`. It should accept an object with the following properties in the body of the request:
@@ -143,3 +153,5 @@ If the `RestaurantPizza` is not created successfully, return the following JSON 
   "errors": ["validation errors"]
 }
 ```
+### RESULTS:
+<img src='/Img/post_to_restaurant_pizzas.png>
