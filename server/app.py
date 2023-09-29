@@ -17,6 +17,15 @@ db.init_app(app)
 
 api = Api(app)
 
+@app.route('/')
+def home ():
+    response = {
+        "Message":"Pizza Restaurant API.",
+        "Pizza_Endpoint": '/pizzas',
+        "Restaurants_Endpoint": '/restaurants',
+        }
+    return make_response(response, 200)
+
 class Restaurants(Resource):
     # Queries for all records for restaurants
     def get(self):
